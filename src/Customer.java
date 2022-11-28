@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Customer extends ReadFile {
+public class Customer extends ReadFile { //används ej
     protected String SocialSecurityNumber;
     protected String name;
     protected int date;

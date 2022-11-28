@@ -30,7 +30,7 @@ public class ReadFile {
             while ((temp = bufIn.readLine()) != null) { //kollar om kunden finns i filen
                 if(temp.equalsIgnoreCase(searchWord)){
                     info = temp;
-                    paymentDate = fileScan.nextLine();
+                    paymentDate = bufIn.readLine();
                     isCustomer = true;
                     break;
                 }
