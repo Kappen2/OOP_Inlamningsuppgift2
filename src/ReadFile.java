@@ -1,4 +1,5 @@
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -9,28 +10,35 @@ public class ReadFile {
 
         String temp;
         String searchWord;
-        String paymentDate ="";
+        String paymentDate = "";
         boolean isCustomer = false;
-        try (BufferedReader bufIn = new BufferedReader(new FileReader("src/customers.txt"))){
+        try {
             Scanner input = new Scanner(System.in);
-            Scanner fileScan = new Scanner("src/customers.txt");
-            fileScan.useDelimiter(",");
+            Scanner fileScan = new Scanner(new File("src/customers.txt"));
             while(true) {
                 System.out.println("Skriv in ett namn eller personnummer: ");
-            if(input.hasNextInt()) { //läser in ett personnummer och omvandlar till String
-                searchWord = String.valueOf(input.nextInt());
-                break;
-            }
-            else if (input.hasNext()) { //läser in ett namn
-                searchWord = input.next();
-                if (searchWord != null)
+                if(input.hasNextInt()) { //läser in ett personnummer och omvandlar till String
+                    searchWord = String.valueOf(input.nextInt());
                     break;
+                }
+                else if (input.hasNextLine()) { //läser in ett namn
+                    searchWord = input.nextLine().trim();
+                    if (searchWord != null)
+                        break;
+                }
             }
-            }
-            while ((temp = bufIn.readLine()) != null) { //kollar om kunden finns i filen
-                if(temp.equalsIgnoreCase(searchWord)){
+            while ((temp = fileScan.nextLine()) != null) { //kollar om kunden finns i filen
+                System.out.println("temp "+temp+"X");
+                String personnumer = temp.substring(0, 10).trim();
+                System.out.println("personnummer "+ personnumer+"X");
+                String namn = temp.substring(11).trim();
+                System.out.println("namn "+ namn+"X");
+                System.out.println("searchWord "+ searchWord+"X");
+                paymentDate = fileScan.nextLine();
+                if(personnumer.equalsIgnoreCase(searchWord) || namn.equalsIgnoreCase(searchWord)){
+                    System.out.println("i if");
                     info = temp;
-                    paymentDate = bufIn.readLine();
+
                     isCustomer = true;
                     break;
                 }
@@ -46,11 +54,11 @@ public class ReadFile {
                 else System.out.println("Personen du sökte har inte betalat sin medlemsavgift");
             }
             else System.out.println("Personen du sökte finns inte i databasen");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchElementException e1){
+        }  catch (NoSuchElementException e1){
             System.out.println("Du gjorde en felaktig sökning");
             e1.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
     }
 }
